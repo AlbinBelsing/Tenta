@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+    <html lang="sv">
+
+<head>
+    <meta charset="utf-8">
+    <link> <!--CSS fil-->
+</head>
+
+    <body> 
+        <form>
+            <fieldset>
+                <legend>Personuppgifter</legend>
+
+                <label for="avatar">Avatar:</label>
+                    <p><select name="alternativ" id="dropDown" required></select></p>
+                            <option value="">Välj en avatar</option>
+                            <option value="utter">Utter</option>
+                            <option value="fisk">Fisk</option>    
+                            <option value="gurka">Gurka</option>
+                    </select>
+
+                    <p><label for="dittNamn">Ditt namn:</label></p>
+                        <p><input type="text" name="dittNamn"></p>
+
+                    <p><label for="yrke">Välj yrke</label></p>
+                        <p><input type="radio" name="yrke" required>Designer</p>
+                        <p><input type="radio" name="yrke" required>Programmerare</p>
+                        <p><input type="radio" name="yrke" required>Annat</p>
+
+                    <p><label for="epost">Din epost:</label></p>
+                        <p><input type="email" name="mail" required></p>
+
+                    <p><input type=submit name="skickaIn" value="Registrera"></p>
+
+            </fieldset>
+        </form>
+    </body>
+</html>
