@@ -1,0 +1,43 @@
+/*HTML kod finns på sidan 6 i tentamen från 2020/03/04*/
+
+body {
+    text-align: center;
+    font-size: 18px;
+    font-family: sans-serif;
+    background-color: antiquewhite;
+    
+}
+
+
+article {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+div:nth-child(even){
+    color: red;
+    background-color: dodgerblue;
+}
+
+div:nth-child(odd) {
+    color: dodgerblue;
+    background-color: red;
+}
+
+div:last-child {
+    background-color: black;
+    color: white;
+}
+
+h1 {
+    background-color: white;
+    height: 60px;
+    margin-bottom: 0;
+    margin-top: 0;
+    border-bottom: 2px solid black;
+    padding-top: 30px
+}
+
