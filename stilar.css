@@ -1,0 +1,39 @@
+
+caption {
+    border-bottom: 1px solid gray;
+    padding: 10px;
+}
+
+h1 {
+    border-top: 1px solid gray;
+    padding: 10px;
+}
+
+table {
+    font-family: sans-serif;
+    border-collapse: collapse;
+    width:500px
+}
+
+thead {
+    border-bottom: 1px solid gray;
+    text-align: right;
+}
+
+th:first-child {
+    text-align: left; 
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+td {
+    text-align: right;
+}
+
+tr:nth-child(2) {
+    background-color: lightgrey;
+}
+
+tr:last-child {
+    border-bottom: 1px solid gray
+}
