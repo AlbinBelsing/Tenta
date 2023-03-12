@@ -1,4 +1,3 @@
-
 <?php
 	include("oneDice.php");
 	include("sixDices.php");
@@ -32,18 +31,15 @@
 		<div>
 
 			<?php 
-				if( isset( $_POST["btnNewGame"] ) ) {
+				if( isset( $_POST["btnNewGame"] ) ) {	// 1.abc
 					
-					setcookie("sumOfAllRounds", "0", time() + 3600); //1.b Skapa två kakor
-					setcookie("nbrOfRounds", "0", time() + 3600); 
-					setcookie("medelValue", "0", time() + 3600);//la till denna kakan så medelvärdet visas när man klickar ned sidan och sedan tar upp den igen
-					
-					$disabled = false;	//1.c
+					setcookie("sumOfAllRounds", "0", time() + 3600); //skapar två kakor
+					setcookie("nbrOfRounds", "0", time() + 3600);  
+
+					$disabled = false;
 					echo "<p style='color: green;'>New Game</p>";
 					
 				}
-				
-
 
 				if( !isset( $_POST["btnRoll"] ) &&		//om ingen knapp trycks
 					!isset($_POST["btnNewGame"]) &&  //2.a
@@ -52,73 +48,113 @@
 					isset($_COOKIE["nbrOfRounds"])) {
 
 						$sumOfAllRounds = $_COOKIE["sumOfAllRounds"]; //hämtar datan från kakorna
-						$nbrOfRounds = $_COOKIE["nbrOfRounds"];
-						$medelValue = $_COOKIE["medelValue"];
+						$nbrOfRounds = $_COOKIE["nbrOfRounds"]; 
 
-						echo " Summan av alla rullningar: " .$_COOKIE["sumOfAllRounds"];
-						echo " Medelvärdet: " .$_COOKIE["medelValue"];
-						echo " Antal slag: " .$_COOKIE["nbrOfRounds"];
-						
+						echo publishData($sumOfAllRounds, $nbrOfRounds);
 
 						$disabled = false;
-
-					} 
-
-					
-					$count = isset($_COOKIE["nbrOfRounds"]) ? $_COOKIE["nbrOfRounds"] : 0;
-					$summan = isset($_COOKIE["sumOfAllRounds"]) ? $_COOKIE["sumOfAllRounds"] : 0; 
+					}
 
 					if (isset($_POST["btnRoll"])) {
 
 
-					$sixDices = new SixDices();
-					$sixDices->rollDices(); //tärningarna rullar bara ibland, vet inte riktigt varför?
-					echo $sixDices->svgDices(); //bilder på tärningar
-					$sixDices->sumDices();
+						$sixDices = new SixDices();
+						$sixDices->rollDices(); 
+						echo $sixDices->svgDices(); //Rad 61-64 bilder på tärningar samt animation
+						$summa = $sixDices->sumDices();
 
-					$average = $_COOKIE["nbrOfRounds"] > 0 ? $_COOKIE["sumOfAllRounds"] / $_COOKIE["nbrOfRounds"] : 0;  
+						$sumOfAllRounds = isset($_COOKIE["sumOfAllRounds"]) ? $_COOKIE["sumOfAllRounds"] : 0; //kollar om kakorna finns
+    					$nbrOfRounds = isset($_COOKIE["nbrOfRounds"]) ? $_COOKIE["nbrOfRounds"] : 0;	//kollar om kakorna finns
 
-					$count++;
-					$summan += $sixDices->sumDices();
+						$sumOfAllRounds += $summa; //Lägger ihop summan av alla rullningar 
+						$nbrOfRounds++; // Lägger till 1 i kakan varje gång man klickar på btnRoll
 
-					setcookie("nbrOfRounds", $count, time() + 3600);
-					setcookie("sumOfAllRounds", $summan, time() + 3600);
-					setcookie("medelValue", $average, time() + 3600 );	
+						setcookie("sumOfAllRounds", $sumOfAllRounds, time() + 3600);	//uppdaterar kakorna
+						setcookie("nbrOfRounds", $nbrOfRounds, time() + 3600); //uppdaterar kakorna
 
-					echo "Summan av senaste slag: " . $sixDices->sumDices(); //Visar summan av senaste slag, kan vara onödig
-					echo " Summan av alla slag: " .$_COOKIE["sumOfAllRounds"]; //kan lägga <p> tag på alla echo så de blir på varsin rad
-					echo " Antal slag: " .$count;
-					echo " Medelvärdet: " .number_format ($average, 2); //number_format så det bara visas två decimaler
+						$avg = $sumOfAllRounds / $nbrOfRounds; //räknar ut average
 
-					$disabled = false; //gör new game och exit klickbara
+						echo publishData($sumOfAllRounds, $nbrOfRounds);
+
+						$disabled = false;
 					}
 
-					
 
+					if (isset($_POST["btnExit"])) {
 
+					setcookie("sumOfAllRounds", "0", time() - 3600); //raderar kakorna om man klickar exit
+					setcookie("nbrOfRounds", "0", time() - 3600); //raderar kakorna om man klickar exit
 
-				if (isset($_POST["btnExit"])) {
-					
-						setcookie("sumOfAllRounds", "", time() - 3600); //raderar kakorna om man klickar exit
-						setcookie("nbrOfRounds", "", time() - 3600); //raderar kakorna om man klickar exit
-						setcookie("medelValue", "0", time() - 3600);//raderar kakorna om man klickar exit
-				}
+					$disabled = true; // gör så att exit och roll inte går o klicka på. Verkar som det funkar även om man inte har med variabeln disabled alls. 
+
+					}
+
 			?>
 
 		</div>
 		
 		<form action="<?php echo( $_SERVER["PHP_SELF"] ); ?>" method="post">
-			<input type="submit" name="btnRoll" class="btn btn-primary" value="Roll six dices" <?php if($disabled) { echo("disabled"); } ?>> <!--Ska bort tror jag-->
+			<input type="submit" name="btnRoll" class="btn btn-primary" value="Roll six dices" <?php if($disabled) { echo("disabled"); } ?>> 
 			<input type="submit" name="btnNewGame" class="btn btn-primary" value="New Game">
-			<input type="submit" name="btnExit" class="btn btn-primary" value="Exit" <?php if($disabled) { echo("disabled"); } ?>> <!--Ska bort tror jag-->
+			<input type="submit" name="btnExit" class="btn btn-primary" value="Exit" <?php if($disabled) { echo("disabled"); } ?>> 
 		</form>
 
-		<script src="script/animation.js"></script> 
+		<script src="script/animation.js"></script>
 	</body>
 
 </html>
 
 
-tr:last-child {
-    border-bottom: 1px solid gray
-}
+
+ <!--
+                    Till ert förfogande har ni för kakor två klasser och en funktion så studera dessa noggrant innan ni börjar.
+                   
+                    Kravspecen:
+
+
+                    1.  När användaren klickar på knappen btnNewGame skall:
+                        a.  Texten ”New Game!” visas för användaren och
+                        b.  Kakorna nbrOfRounds och sumOfAllRounds skapas och tilldelas värdet 0.
+                        c.  Submit-knapparna btnRoll och btnExit skall också göras användbara.
+                       
+                        Tips!
+                        En kontroll!
+                        Variabeln $disabled!
+
+
+                    2.  Om kakorna nbrOfRounds och sumOfAllrounds kommer till servern och ingen av
+                        submit-knapparna (varken btnRoll, btnNewGame eller btnExit är tryckta) skall:
+                        a.  Användaren se antalet gånger ni rullat de sex tärningarna, totalsumman av alla
+                            rullningar och medelvärdet för alla rullningar.
+                        b.  Submit-knapparna btnRoll och btnExit skall också göras användbara.
+
+
+                        Tips!
+                        Fem kontroller!
+                        Variabeln $disabled!
+                           
+                    3.  Om användaren klickar på btnRoll och kakorn nbrOfRounds och sumOfAllRounds
+                        kommer till servern skall:
+                        a.  Sex tärningar rullas och resultatet visas som bilder på tärningarna.
+                        b.  Därtill skall ni också för användaren presentera antalet gånger ni rullat de sex tärningarna,
+                            totalsumman av alla rullningar och medelvärdet för alla rullningar.
+                        c.  Submit-knapparna btnRoll och btnExit skall också göras användbara.
+                        d.  Avslutningsvis skall också innehållet i kakorna nbrOfRounds och sumOfAllRounds uppdateras.
+
+
+                        Tips!
+                        Tre kontroller!
+                        Variabeln $disabled!
+
+
+                    4.  Om användaren klickar på btnExit och kakorna nbrOfRounds och sumOfAllRounds
+                        kommer till servern skall:
+                        a. Kakorna tas bort på klienten.
+                        b. Knapparna btnRoll och btnExit skall inte längre vara användbara.
+
+
+                        Tips!
+                        Tre kontroller!
+                        Variabeln $disabled!
+                   
+			-->
